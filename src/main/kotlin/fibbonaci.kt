@@ -1,7 +1,6 @@
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.ln
-import kotlin.system.measureTimeMillis
 
 interface Node<E> {
     var parent: Node<E>?
@@ -273,21 +272,4 @@ class FibonacciHeap<E : Comparable<E>> : Queue<E> {
         insert(e)
         return true
     }
-}
-
-fun <E : Comparable<E>> testSpeed(input: Array<E>) {
-    val heap = FibonacciHeap<E>()
-    heap.addAll(input)
-    while (!heap.isEmpty()) {
-        heap.poll()
-    }
-}
-
-
-fun main() {
-    val a = Array(100_000) { (-100..100).random() }
-    val speed = measureTimeMillis {
-        testSpeed(a)
-    }
-    println(speed)
 }
