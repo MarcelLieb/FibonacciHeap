@@ -177,6 +177,15 @@ internal class FibonacciHeapTest {
         heap.addAll(1..100)
         heap.removeAll(listOf(1, 3, 7, 8, 15, 16, 31, 32, 63, 64, 100))
         assertEquals(89, heap.size)
-        assertEquals(2, heap.remove())
+        var prev: Int? = null
+        var count = 0
+        while (heap.isNotEmpty()) {
+            val current = heap.remove()
+            if (prev != null)
+                assertTrue(prev < current)
+            prev = current
+            count++
+        }
+        assertEquals(89, count)
     }
 }
