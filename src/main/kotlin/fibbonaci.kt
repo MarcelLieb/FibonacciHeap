@@ -21,7 +21,7 @@ class FibonacciHeap<E : Comparable<E>> : Queue<E> {
     private var min: Node<E>? = null
     private val nodeLookup: MutableMap<E, MutableList<Node<E>>> = mutableMapOf()
 
-    private fun insert(value: E): Node<E> {
+    private fun insert(value: E) {
         val node = NodeImpl(value)
         roots.add(node)
         if (min == null || node.value < min!!.value) {
@@ -29,7 +29,6 @@ class FibonacciHeap<E : Comparable<E>> : Queue<E> {
         }
         nodeLookup.getOrPut(value) { mutableListOf() }.add(node)
         size++
-        return node
     }
 
     fun decreaseKey(entry: E, value: E): Boolean {
@@ -55,9 +54,8 @@ class FibonacciHeap<E : Comparable<E>> : Queue<E> {
     }
 
     private fun cut(node: Node<E>) {
-        if (node.parent == null) {
-            throw Exception("Trying to cut a root")
-        }
+        if (node.parent == null)
+            return
         node.parent!!.children.remove(node)
         val parent = node.parent!!
         node.parent = null
@@ -241,11 +239,9 @@ class FibonacciHeap<E : Comparable<E>> : Queue<E> {
     }
 
     override fun containsAll(elements: Collection<E>): Boolean {
-        for (element in elements) {
-            if (!nodeLookup.containsKey(element)) {
+        for (element in elements)
+            if (!nodeLookup.containsKey(element))
                 return false
-            }
-        }
         return true
     }
 
@@ -262,9 +258,8 @@ class FibonacciHeap<E : Comparable<E>> : Queue<E> {
     }
 
     override fun element(): E {
-        if (min == null) {
+        if (isEmpty())
             throw NoSuchElementException("Empty heap")
-        }
         return min!!.value
     }
 
