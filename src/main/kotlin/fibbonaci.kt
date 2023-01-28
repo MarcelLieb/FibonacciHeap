@@ -135,11 +135,11 @@ class FibonacciHeap<E : Comparable<E>> : Queue<E> {
     }
 
     private fun delete(node: Node<E>): Node<E>? {
-        decreaseKey(node, min!!.value)
         nodeLookup[node.value]!!.remove(node)
         if (nodeLookup[node.value]!!.isEmpty()) {
             nodeLookup.remove(node.value)
         }
+        decreaseKey(node, min!!.value)
         return deleteMin()
     }
 
@@ -197,7 +197,8 @@ class FibonacciHeap<E : Comparable<E>> : Queue<E> {
         for (node in nodeLookup.keys) {
             if (elements.contains(node)) continue
 
-            nodeLookup[node]!!.forEach { delete(it) }
+            val deleteList = nodeLookup[node]!!.map { it }
+            deleteList.forEach { delete(it) }
             deleted = true
         }
 
@@ -221,7 +222,7 @@ class FibonacciHeap<E : Comparable<E>> : Queue<E> {
         var deleted = false
         for (element in elements) {
             if (nodeLookup.containsKey(element)) {
-                delete(nodeLookup[element]!!.removeLast())
+                delete(nodeLookup[element]!!.last())
                 deleted = true
             }
         }
@@ -230,7 +231,7 @@ class FibonacciHeap<E : Comparable<E>> : Queue<E> {
 
     override fun remove(element: E): Boolean {
         if (nodeLookup.containsKey(element)) {
-            delete(nodeLookup[element]!!.removeLast())
+            delete(nodeLookup[element]!!.last())
             return true
         }
         return false
