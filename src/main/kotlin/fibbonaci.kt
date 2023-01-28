@@ -89,10 +89,13 @@ class FibonacciHeap<E : Comparable<E>> : Queue<E> {
         }
         size--
 
+        // Check if Lookup table already got updated by delete
+        if (!nodeLookup.containsKey(min.value)) return min
+
         nodeLookup[min.value]!!.remove(min)
-        if (nodeLookup[min.value]!!.isEmpty()) {
+        if (nodeLookup[min.value]!!.isEmpty())
             nodeLookup.remove(min.value)
-        }
+
         return min
     }
 
@@ -134,13 +137,13 @@ class FibonacciHeap<E : Comparable<E>> : Queue<E> {
         }
     }
 
-    private fun delete(node: Node<E>): Node<E>? {
+    private fun delete(node: Node<E>) {
         nodeLookup[node.value]!!.remove(node)
-        if (nodeLookup[node.value]!!.isEmpty()) {
+        if (nodeLookup[node.value]!!.isEmpty())
             nodeLookup.remove(node.value)
-        }
+
         decreaseKey(node, min!!.value)
-        return deleteMin()
+        deleteMin()
     }
 
     private fun findMin(): Node<E>? {
