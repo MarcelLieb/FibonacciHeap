@@ -10,13 +10,13 @@ interface Node<E> {
     var excited: Boolean
 }
 
-class NodeImpl<E>(override var value: E): Node<E> {
+class NodeImpl<E>(override var value: E) : Node<E> {
     override var parent: Node<E>? = null
     override val children: MutableList<Node<E>> = mutableListOf()
     override var excited: Boolean = false
 }
 
-class FibonacciHeap<E: Comparable<E>> : Queue<E> {
+class FibonacciHeap<E : Comparable<E>> : Queue<E> {
     override var size: Int = 0
     private val roots: MutableList<Node<E>> = mutableListOf()
     private var min: Node<E>? = null
@@ -115,14 +115,14 @@ class FibonacciHeap<E: Comparable<E>> : Queue<E> {
         min = roots.minBy { it.value }
     }
 
-    private fun insertRoot(arrayOfRoots: Array<Node<E>?>, node:Node<E>) {
+    private fun insertRoot(arrayOfRoots: Array<Node<E>?>, node: Node<E>) {
         val degree = node.children.size
-        if(arrayOfRoots[degree] == null) {
+        if (arrayOfRoots[degree] == null) {
             arrayOfRoots[degree] = node
             return
         }
         val other = arrayOfRoots[degree]!!
-        if(other.value > node.value) {
+        if (other.value > node.value) {
             other.parent = node
             node.children.add(other)
             arrayOfRoots[degree] = null
@@ -259,8 +259,8 @@ class FibonacciHeap<E: Comparable<E>> : Queue<E> {
     }
 
     override fun element(): E {
-        if(min == null) {
-            throw NoSuchElementException()
+        if (min == null) {
+            throw NoSuchElementException("Empty heap")
         }
         return min!!.value
     }
@@ -275,7 +275,7 @@ class FibonacciHeap<E: Comparable<E>> : Queue<E> {
     }
 }
 
-fun<E : Comparable<E>> testSpeed(input: Array<E>) {
+fun <E : Comparable<E>> testSpeed(input: Array<E>) {
     val heap = FibonacciHeap<E>()
     heap.addAll(input)
     while (!heap.isEmpty()) {
