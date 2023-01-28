@@ -196,11 +196,25 @@ class FibonacciHeap<E: Comparable<E>> : Queue<E> {
     override fun retainAll(elements: Collection<E>): Boolean {
         var deleted = false
         for (node in nodeLookup.keys) {
-            if (!elements.contains(node)) {
-                nodeLookup[node]!!.forEach { delete(it) }
+            if (elements.contains(node)) continue
+
+            nodeLookup[node]!!.forEach { delete(it) }
+            deleted = true
+        }
+
+        for (element in elements.toSet()) {
+            if (!nodeLookup.containsKey(element)) continue
+
+            val occurrences = elements.count { it == element }
+            if (nodeLookup[element]!!.size > occurrences) {
+                val list = nodeLookup[element]!!
+                for (i in 0 until list.size - occurrences)
+                    delete(list[i])
+
                 deleted = true
             }
         }
+
         return deleted
     }
 
