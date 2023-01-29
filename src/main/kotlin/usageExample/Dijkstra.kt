@@ -166,9 +166,9 @@ fun benchmarkQueues(configs: List<benchmarkConfig>) {
 
 fun main() {
     val benchmark = listOf(
-        benchmarkConfig(100000, 100),
-        benchmarkConfig(100000, 1000),
-        benchmarkConfig(1000000, 2)
+        benchmarkConfig(100_000, 100),
+        benchmarkConfig(100_000, 1_000),
+        benchmarkConfig(500_000, 2)
     )
     benchmarkQueues(benchmark)
 }
