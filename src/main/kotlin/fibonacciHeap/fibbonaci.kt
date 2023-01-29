@@ -1,15 +1,17 @@
+package fibonacciHeap
+
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.ln
 
-interface Node<E> {
+private interface Node<E> {
     var parent: Node<E>?
     val children: MutableList<Node<E>>
     var value: E
     var excited: Boolean
 }
 
-class NodeImpl<E>(override var value: E) : Node<E> {
+private class NodeImpl<E>(override var value: E) : Node<E> {
     override var parent: Node<E>? = null
     override val children: MutableList<Node<E>> = mutableListOf()
     override var excited: Boolean = false
