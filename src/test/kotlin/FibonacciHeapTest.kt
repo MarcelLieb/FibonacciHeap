@@ -43,6 +43,17 @@ internal class FibonacciHeapTest {
     }
 
     @Test
+    fun decreaseKeyTwice() {
+        val heap = FibonacciHeap<Int>()
+        heap.addAll(listOf(1, 2, 2, 4, 5))
+        assertTrue(heap.decreaseKey(5, 3))
+        assertEquals(1, heap.peek())
+        assertTrue(heap.decreaseKey(3, 0))
+        assertEquals(0, heap.peek())
+        assertEquals(5, heap.size)
+    }
+
+    @Test
     fun decreaseKeyDataClass() {
         val heap = FibonacciHeap<Distance>()
         heap.add(Distance(Entry("A"), 2))
