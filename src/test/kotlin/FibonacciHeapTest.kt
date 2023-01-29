@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
 internal class FibonacciHeapTest {
-    data class Distance(val name: String, val value: Int) : Comparable<Distance> {
+    data class Entry(val name: String)
+    data class Distance(val name: Entry, val value: Int) : Comparable<Distance> {
         override fun compareTo(other: Distance): Int {
             return value.compareTo(other.value)
         }
@@ -44,16 +45,28 @@ internal class FibonacciHeapTest {
     @Test
     fun decreaseKeyDataClass() {
         val heap = FibonacciHeap<Distance>()
-        heap.add(Distance("A", 1))
-        heap.add(Distance("B", 2))
-        heap.add(Distance("C", 3))
-        heap.add(Distance("D", 3))
-        heap.add(Distance("E", 5))
-        assertTrue(heap.decreaseKey(Distance("C", 3), Distance("C", 0)))
-        assertEquals(Distance("C", 0), heap.peek())
-        assertEquals(5, heap.size)
-        assertFalse(heap.decreaseKey(Distance("F", 3), Distance("F", 0)))
-        assertFalse(heap.decreaseKey(Distance("C", 0), Distance("C", 3)))
+        heap.add(Distance(Entry("A"), 2))
+        heap.add(Distance(Entry("B"), 2))
+        heap.add(Distance(Entry("C"), 3))
+        heap.add(Distance(Entry("D"), 3))
+        heap.add(Distance(Entry("E"), 5))
+        assertTrue(heap.decreaseKey(Distance(Entry("C"), 3), Distance(Entry("C"), 1)))
+        assertTrue(heap.decreaseKey(Distance(Entry("D"), 3), Distance(Entry("D"), 0)))
+        assertEquals(Distance(Entry("D"), 0), heap.poll())
+        assertEquals(4, heap.size)
+        assertFalse(heap.decreaseKey(Distance(Entry("F"), 3), Distance(Entry("F"), 0)))
+        assertFalse(heap.decreaseKey(Distance(Entry("C"), 0), Distance(Entry("C"), 3)))
+    }
+
+    @Test
+    fun decreaseKeyMassive() {
+        val heap = FibonacciHeap<Int>()
+        for (i in 0..1000)
+            heap.add(i)
+        for (i in 0..1000)
+            heap.decreaseKey(i, if (1000 - i < i) 1000 - i else i)
+        for (i in 0..1000)
+            assertEquals(i / 2, heap.poll())
     }
 
     @Test
@@ -80,13 +93,14 @@ internal class FibonacciHeapTest {
     }
 
     @Test
-    operator fun iterator() {
+    fun iterator() {
         val heap = FibonacciHeap<Int>()
         heap.addAll(listOf(1, 2, 2, 4, 5))
         assertEquals(5, heap.size)
-        heap.poll()
+        assertEquals(1, heap.poll())
         heap.add(-1)
-        val list = heap.toList()
+        assertEquals(-1, heap.peek())
+        val list = heap.iterator().asSequence().toList()
         assertEquals(setOf(-1, 2, 2, 4, 5), list.toSet())
         assertEquals(5, list.size)
     }
