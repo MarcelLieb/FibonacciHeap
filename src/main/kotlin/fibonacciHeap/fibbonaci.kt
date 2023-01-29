@@ -17,7 +17,7 @@ private class NodeImpl<E>(override var value: E) : Node<E> {
     override var excited: Boolean = false
 }
 
-class FibonacciHeap<E : Comparable<E>> : Queue<E> {
+class FibonacciHeap<E : Comparable<E>> : PriorityQueue<E>() {
     override var size: Int = 0
     private val roots: MutableList<Node<E>> = mutableListOf()
     private var min: Node<E>? = null
