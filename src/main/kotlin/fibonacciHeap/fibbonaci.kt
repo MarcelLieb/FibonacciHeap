@@ -40,6 +40,8 @@ class FibonacciHeap<E : Comparable<E>> : PriorityQueue<E>() {
             return false
         val list = nodeLookup[entry]!!
         val node = list.find { it.value == entry } ?: return false
+        nodeLookup[entry]!!.remove(node)
+        nodeLookup.getOrPut(value) { mutableListOf() }.add(node)
         decreaseKey(node, value)
         return true
     }
@@ -101,7 +103,7 @@ class FibonacciHeap<E : Comparable<E>> : PriorityQueue<E>() {
 
     private fun consolidate() {
         // #MagicNumbers
-        val degreeArray = Array<Node<E>?>(ceil(ln(size.toDouble()) * 1.5).toInt()) { null }
+        val degreeArray = Array<Node<E>?>(ceil(ln(size.toDouble()) * 2).toInt()) { null }
         val newRoots = mutableListOf<Node<E>>()
         for (node in roots) {
             insertRoot(degreeArray, node)
