@@ -227,7 +227,8 @@ class FibonacciHeap<E : Comparable<E>> : PriorityQueue<E>() {
         var deleted = false
         for (element in elements) {
             if (nodeLookup.containsKey(element)) {
-                delete(nodeLookup[element]!!.last())
+                val node = nodeLookup[element]!!.find { it.value == element } ?: continue
+                delete(node)
                 deleted = true
             }
         }
@@ -236,7 +237,8 @@ class FibonacciHeap<E : Comparable<E>> : PriorityQueue<E>() {
 
     override fun remove(element: E): Boolean {
         if (nodeLookup.containsKey(element)) {
-            delete(nodeLookup[element]!!.last())
+            val node = nodeLookup[element]!!.find { it.value == element } ?: return false
+            delete(node)
             return true
         }
         return false
