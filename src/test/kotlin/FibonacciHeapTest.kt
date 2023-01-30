@@ -12,6 +12,23 @@ internal class FibonacciHeapTest {
         }
     }
 
+    data class IKV<I, K: Comparable<K>, V>(val id: I, val key: K, val value: V) : Comparable<IKV<I, K, V>> {
+        override fun compareTo(other: IKV<I, K, V>): Int {
+            return key.compareTo(other.key)
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is IKV<*, *, *>) return false
+            if (id != other.id) return false
+            return true
+        }
+
+        override fun hashCode(): Int {
+            return id.hashCode()
+        }
+    }
+
     @Test
     fun addRemoveCheckSize() {
         val heap = FibonacciHeap<Int>()
@@ -67,6 +84,17 @@ internal class FibonacciHeapTest {
         assertEquals(4, heap.size)
         assertFalse(heap.decreaseKey(Distance(Entry("F"), 3), Distance(Entry("F"), 0)))
         assertFalse(heap.decreaseKey(Distance(Entry("C"), 0), Distance(Entry("C"), 3)))
+    }
+
+    @Test
+    fun decreaseKeyIKV() {
+        val heap = FibonacciHeap<IKV<Int, Int, Entry>>()
+        heap.add(IKV(0, 2, Entry("A")))
+        heap.add(IKV(1, 2, Entry("B")))
+        heap.add(IKV(2, 3, Entry("C")))
+        heap.add(IKV(3, 3, Entry("C")))
+        heap.decreaseKey(IKV(2, 3, Entry("C")), IKV(2, 1, Entry("C")))
+        assertEquals(IKV(2, 1, Entry("C")), heap.poll())
     }
 
     @Test
@@ -132,6 +160,21 @@ internal class FibonacciHeapTest {
         assertEquals(5, heap.remove())
         assertEquals(0, heap.size)
         assertThrowsExactly(NoSuchElementException::class.java) { heap.remove() }
+    }
+
+    @Test
+    fun removeIKV() {
+        val heap = FibonacciHeap<IKV<Int, Int, Entry>>()
+        heap.add(IKV(0, 2, Entry("A")))
+        heap.add(IKV(1, 2, Entry("B")))
+        heap.add(IKV(2, 3, Entry("C")))
+        heap.add(IKV(3, 3, Entry("C")))
+        assertTrue(heap.contains(IKV(2, 3, Entry("C"))))
+        assertTrue(heap.contains(IKV(2, 33, Entry("any"))))
+        assertTrue(heap.remove(IKV(2, 69, Entry("anything at all"))))
+        assertEquals(3, heap.size)
+        assertFalse(heap.contains(IKV(2, 3, Entry("C"))))
+        assertFalse(heap.remove(IKV(4, 3, Entry("C"))))
     }
 
     @Test
