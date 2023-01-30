@@ -251,9 +251,12 @@ class FibonacciHeap<E : Comparable<E>> : PriorityQueue<E>() {
     }
 
     override fun containsAll(elements: Collection<E>): Boolean {
-        for (element in elements)
+        for (element in elements) {
             if (!nodeLookup.containsKey(element))
                 return false
+            if (!nodeLookup[element]!!.any { it.value == element })
+                return false
+        }
         return true
     }
 
