@@ -207,18 +207,24 @@ class FibonacciHeap<E : Comparable<E>> : PriorityQueue<E>() {
             deleted = true
         }
 
-        for (element in elements.toSet()) {
+        for (element in elements) {
             if (!nodeLookup.containsKey(element)) continue
 
-            val occurrences = elements.count { it == element }
-            if (nodeLookup[element]!!.size > occurrences) {
-                val list = nodeLookup[element]!!
-                for (i in 0 until list.size - occurrences)
-                    delete(list[i])
-
-                deleted = true
-            }
+            val deleteList = nodeLookup[element]!!.filter { it.value != element }
+            deleteList.forEach { delete(it) }
+            deleted = true
         }
+
+        for (element in elements.toSet())
+            if (nodeLookup.containsKey(element)) {
+                val occurrences = elements.count{ it == element }
+                val list = nodeLookup[element]!!.filter { it.value == element }
+                if (list.size > occurrences) {
+                    for (i in 0 until list.size - occurrences)
+                        delete(list[i])
+                    deleted = true
+                }
+            }
 
         return deleted
     }
