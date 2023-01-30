@@ -17,7 +17,7 @@ class Graph<E>(nodes: Collection<E>, edges: Collection<Triple<E, E, Int>>) {
 
     val nodes: List<E>
         get() = _nodes.toList()
-    private val edges = mutableMapOf<E, List<Pair<E, Int>>>()
+    private val edges = mutableMapOf<E, MutableList<Pair<E, Int>>>()
 
     init {
         this._nodes.addAll(nodes)
@@ -30,9 +30,9 @@ class Graph<E>(nodes: Collection<E>, edges: Collection<Triple<E, E, Int>>) {
     }
     fun addEdge(from: E, to: E, weight: Int) {
         if (edges.containsKey(from)) {
-            edges[from] = edges[from]!!.plus(Pair(to, weight))
+            edges[from]!!.add(Pair(to, weight))
         } else {
-            edges[from] = listOf(Pair(to, weight))
+            edges[from] = mutableListOf(Pair(to, weight))
         }
     }
 
