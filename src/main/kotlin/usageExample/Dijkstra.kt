@@ -103,17 +103,21 @@ class Dijkstra {
         graph.forallNodes { node ->
             queue.add(Distance(start, node, distances[node]!!))
         }
+
+        val visited = mutableSetOf<Node>()
         while (queue.isNotEmpty()) {
             val edge = queue.poll()!!
             val (_, node, _) = edge
+            if (visited.contains(node)) continue
             graph.forallAdjEdges(node) { from, to, weight ->
                 val newDistance = distances[from]!! + weight
                 if (newDistance < distances[to]!!) {
-                    queue.remove(Distance(start, to, distances[to]!!))
+                    // queue.remove(Distance(start, to, distances[to]!!))
                     queue.add(Distance(start, to, newDistance))
                     distances[to] = newDistance
                 }
             }
+            visited.add(node)
         }
         return distances
     }
@@ -149,9 +153,9 @@ fun benchmarkQueues(nodeCount: Int, edgesPerNode: Int) {
     val fd = measureTimeMillis { fibdk = dijkstra.shortestPathFibonacci(graph, start) }
     println("Fibonacci Heap with decrease Key: $fd ms")
     val f = measureTimeMillis { fib = dijkstra.shortestPath(graph, start, fibonacciHeap) }
-    println("Fibonacci Heap with remove then add: $f ms")
+    println("Fibonacci Heap with only add: $f ms")
     val s = measureTimeMillis { pri = dijkstra.shortestPath(graph, start, priorityQueue) }
-    println("Java PriorityQueue with remove then add: $s ms")
+    println("Java PriorityQueue with only add: $s ms")
     println()
 
     if (fib != fibdk || fib != pri) println("Something went wrong")
